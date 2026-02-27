@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .form-container {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h2 {
+            margin-bottom: 25px;
+            color: #1a73e8;
+            text-align: center;
+            font-size: 24px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #444;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover { background-color: #1557b0; }
+
+        #status {
+            text-align: center;
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .success { display: block !important; background: #e6ffed; color: #1e4620; border: 1px solid #c3e6cb; }
+        .error { display: block !important; background: #ffeef0; color: #a94442; border: 1px solid #f5c6cb; }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Registration Form</h2>
+    
+    <form id="regForm" action="https://formspree.io/f/mdalekea" method="POST">
+        
+        <input type="hidden" name="_subject" value="New Registration Received!">
+
+        <div class="input-group">
+            <label for="name">Full Name</label>
+            <input type="text" name="name" id="name" required>
+        </div>
+
+        <div class="input-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" name="phone" id="phone" required>
+        </div>
+
+        <div class="input-group">
+            <label for="parents_name">Parents Name</label>
+            <input type="text" name="parents_name" id="parents_name" required>
+        </div>
+
+        <div class="input-group">
+            <label for="email">Email Address</label>
+            <input type="email" name="email" id="email" required>
+        </div>
+
+        <div class="input-group">
+            <label for="location">Location</label>
+            <input type="text" name="location" id="location" placeholder="City, Country" required>
+        </div>
+
+        <div class="input-group">
+            <label for="gender">Gender</label>
+            <select name="gender" id="gender" required>
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
+        <button type="submit" id="submitBtn">Submit Registration</button>
+        <div id="status"></div>
+    </form>
+</div>
+
+<script>
+    const form = document.getElementById("regForm");
+    const status = document.getElementById("status");
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const data = new FormData(form);
+        const btn = document.getElementById("submitBtn");
+        
+        // Show loading state
+        btn.disabled = true;
+        btn.innerText = "Sending...";
+        status.textContent = "Processing your registration...";
+        status.className = "success";
+        status.style.display = "block";
+
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: data,
+                headers: { 'Accept': 'application/json' }
+            });
+
+            if (response.ok) {
+                status.textContent = "Success! Registration details sent.";
+                status.className = "success";
+                form.reset(); 
+            } else {
+                status.textContent = "Error: Please update the 'action' ID in the code.";
+                status.className = "error";
+            }
+        } catch (error) {
+            status.textContent = "Network error. Please check your connection.";
+            status.className = "error";
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "Submit Registration";
+        }
+    });
+</script>
+
+</body>
+</html>
